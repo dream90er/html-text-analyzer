@@ -24,7 +24,7 @@ public class ConsumerHandler extends HandlerDecorator {
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         String text = new String(ch, start, length);
-            stringBuilder.append(text);
+        stringBuilder.append(text);
     }
 
     @Override

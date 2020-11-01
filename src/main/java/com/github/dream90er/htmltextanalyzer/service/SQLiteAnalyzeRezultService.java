@@ -39,7 +39,7 @@ public class SQLiteAnalyzeRezultService implements AnalyzeResultService {
             pstmt.setString(2, analyzeResult.getResultMapAsString());
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new ServiceExceprion("An exception occurred while adding result to the database", e);
+            throw new ServiceException("An exception occurred while adding result to the database", e);
         }
     }
 
@@ -47,7 +47,7 @@ public class SQLiteAnalyzeRezultService implements AnalyzeResultService {
         try {
             return DriverManager.getConnection(sQLiteConnectionString);
         } catch (SQLException e) {
-            throw new ServiceExceprion("An exception occurred while connecting to the database", e);
+            throw new ServiceException("An exception occurred while connecting to the database", e);
         }
     }
 
@@ -57,7 +57,7 @@ public class SQLiteAnalyzeRezultService implements AnalyzeResultService {
             stmt.execute(CREATE_RESULT_TABLE_STATEMENT);
             setInitialized();
         } catch (SQLException e) {
-            throw new ServiceExceprion("An exception occurred while initilizing database", e);
+            throw new ServiceException("An exception occurred while initilizing database", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class SQLiteAnalyzeRezultService implements AnalyzeResultService {
             new SQLiteAnalyzeRezultService(sQLiteConnectionString);
         try {
             sQLiteAnalyzeRezultService.createResultTable();
-        } catch (ServiceExceprion e) {
+        } catch (ServiceException e) {
             //TODO
         }
         return sQLiteAnalyzeRezultService;

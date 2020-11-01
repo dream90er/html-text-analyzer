@@ -3,13 +3,13 @@ package com.github.dream90er.htmltextanalyzer.service;
 import com.github.dream90er.htmltextanalyzer.HtmlTextAnalyzerException;
 
 @SuppressWarnings("serial")
-public class ServiceExceprion extends HtmlTextAnalyzerException {
+public class ServiceException extends HtmlTextAnalyzerException {
 
-    public ServiceExceprion(String msg) {
+    public ServiceException(String msg) {
         super(msg);
     }
 
-    public ServiceExceprion(String msg, Throwable cause) { 
+    public ServiceException(String msg, Throwable cause) { 
         super(msg, cause); 
     }
     

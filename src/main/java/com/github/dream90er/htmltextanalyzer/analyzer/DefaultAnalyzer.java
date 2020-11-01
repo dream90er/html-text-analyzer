@@ -1,9 +1,12 @@
 package com.github.dream90er.htmltextanalyzer.analyzer;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -23,9 +26,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class DefaultAnalyzer implements Analyzer {
 
-    private static final String DELIMETRS_REGEX_STRING = "[\\s,\\.\\!\\?\";:\\[\\]\\(\\)\\n\\r\\t]+";
+    private static final String DELIMETERS_REGEX_STRING = "[\\s,\\.\\!\\?\";:\\[\\]\\(\\)\\n\\r\\t]+";
 
-    private static final Pattern DELIMETRS_REGEX_PATTERN = Pattern.compile(DELIMETRS_REGEX_STRING);
+    private static final Pattern DELIMETERS_REGEX_PATTERN = Pattern.compile(DELIMETERS_REGEX_STRING);
+
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
 
     @Override
     public Map<String, Integer> analyze(Path pathToFile) {
@@ -33,9 +38,8 @@ public class DefaultAnalyzer implements Analyzer {
         DefaultHandler handler = createHandlersChain(resultMap);
         Parser parser = new Parser();
         parser.setContentHandler(handler);
-        try (InputStream fileInputStream = new BufferedInputStream (
-                new FileInputStream(pathToFile.toFile()))) {
-            InputSource source = new InputSource(fileInputStream); 
+        try (InputStream fileInputStream = new FileInputStream(pathToFile.toFile())) {
+            InputSource source = createInputSource(fileInputStream);
             parser.parse(source);
         } catch (IOException e) {
             throw new AnalyzerException("An exception occurred while reading file" + pathToFile.toString(), e);
@@ -43,6 +47,13 @@ public class DefaultAnalyzer implements Analyzer {
             throw new AnalyzerException("An exception occurred while parsing file" + pathToFile.toString(), e);
         }
         return resultMap;
+    }
+
+    private InputSource createInputSource(InputStream fileInputStream) {
+        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, CHARSET);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        InputSource source = new InputSource(bufferedReader);
+        return source;
     }
 
     private DefaultHandler createHandlersChain(Map<String, Integer> resultMap) {
@@ -55,7 +66,7 @@ public class DefaultAnalyzer implements Analyzer {
 
     private Consumer<String> getElementConsumer(Map<String, Integer> resultMap) {
         return (string) ->
-            Arrays.stream(DELIMETRS_REGEX_PATTERN.split(string))
+            Arrays.stream(DELIMETERS_REGEX_PATTERN.split(string))
                 .map(word -> word.toUpperCase())
                 .filter(word -> !word.equals(""))
                 .forEach(word -> resultMap.compute(word, 

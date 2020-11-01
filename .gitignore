@@ -1,5 +1,7 @@
+### MAVEN ###
 target/
-temp/
+
+### VSCode ###
 .vscode/
 
 ### STS ###
@@ -11,4 +13,6 @@ temp/
 .springBeans
 .sts4-cache
 
+### html-text-analyzer ###
+temp/
 htmlTextAnalyzer.db
