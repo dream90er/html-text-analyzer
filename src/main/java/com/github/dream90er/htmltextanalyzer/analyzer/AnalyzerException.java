@@ -2,6 +2,11 @@ package com.github.dream90er.htmltextanalyzer.analyzer;
 
 import com.github.dream90er.htmltextanalyzer.HtmlTextAnalyzerException;
 
+/**
+ * Analyzer exception
+ * 
+ * @author Sychev Alexey 
+ */ 
 @SuppressWarnings("serial")
 public class AnalyzerException extends HtmlTextAnalyzerException {
 

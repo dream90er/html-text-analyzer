@@ -4,6 +4,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * Content handler decorator that only passes everything outside 
+ * the specific tag to the underlying handler.
+ * 
+ * @author Sychev Alexey 
+ */ 
 public class ExcludeFilterHandler extends HandlerDecorator {
 
     private final String filterTag;
@@ -30,13 +36,22 @@ public class ExcludeFilterHandler extends HandlerDecorator {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, 
+            Attributes attributes) throws SAXException {
         if (filterTag.equals(localName)) inFilterTag = true;
         if (!inFilterTag)
             super.startElement(uri, localName, qName, attributes);
     }
 
-    public static ExcludeFilterHandler getInstance(DefaultHandler handler, String filterTag) {
+    /**
+     * Get a {@code ExcludeFilterHandler} instance.
+     * 
+     * @param handler next handler in the decorators chain
+     * @param filterTag tag to be filtred
+     * @return {@code ExcludeFilterHandler} instance
+     */
+    public static ExcludeFilterHandler getInstance(DefaultHandler handler, 
+            String filterTag) {
         return new ExcludeFilterHandler(handler, filterTag);
     }
 

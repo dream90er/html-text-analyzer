@@ -2,6 +2,12 @@ package com.github.dream90er.htmltextanalyzer.resulthandler;
 
 import com.github.dream90er.htmltextanalyzer.entity.AnalyzeResult;
 
+/**
+ * {@link ResultHandler} implementation that prints {@link AnalyzeResult} to the system 
+ * console.
+ * 
+ * @author Sychev Alexey 
+ */ 
 public class SystemOutputResultHandler implements ResultHandler {
 
     @Override
@@ -11,7 +17,7 @@ public class SystemOutputResultHandler implements ResultHandler {
 
     }
 
-    private static String buildResultString(AnalyzeResult result) {
+    private String buildResultString(AnalyzeResult result) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Results for:\n")
             .append(result.getPageUrl())
@@ -20,6 +26,11 @@ public class SystemOutputResultHandler implements ResultHandler {
         return stringBuilder.toString();
     }
 
+    /**
+     * Get a {@code SystemOutputResultHandler} instance.
+     * 
+     * @return {@code SystemOutputResultHandler} instance
+     */
     public static SystemOutputResultHandler getInstance() {
         return new SystemOutputResultHandler();
     }
