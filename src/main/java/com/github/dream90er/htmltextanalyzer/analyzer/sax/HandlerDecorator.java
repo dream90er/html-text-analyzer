@@ -5,6 +5,12 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * Decorator base class for the {@link DefaultHandler} class. Delegates all SAX events 
+ * calls to an underlying decorated handler instance.
+ * 
+ * @author Sychev Alexey 
+ */ 
 public class HandlerDecorator extends DefaultHandler {
 
     private final DefaultHandler handler;
@@ -59,7 +65,8 @@ public class HandlerDecorator extends DefaultHandler {
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, 
+            Attributes attributes) throws SAXException {
         handler.startElement(uri, localName, qName, attributes);
     }
 

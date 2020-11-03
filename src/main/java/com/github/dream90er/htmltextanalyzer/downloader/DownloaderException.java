@@ -2,6 +2,11 @@ package com.github.dream90er.htmltextanalyzer.downloader;
 
 import com.github.dream90er.htmltextanalyzer.HtmlTextAnalyzerException;
 
+/**
+ * Downloader exception
+ * 
+ * @author Sychev Alexey 
+ */ 
 @SuppressWarnings("serial")
 public class DownloaderException extends HtmlTextAnalyzerException {
     

@@ -3,6 +3,11 @@ package com.github.dream90er.htmltextanalyzer.entity;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * Entity that represents result of web page analyzing.
+ * 
+ * @author Sychev Alexey 
+ */ 
 public class AnalyzeResult {
 
     private final String pageUrl;
@@ -53,10 +58,23 @@ public class AnalyzeResult {
         return true;
     }
 
-    public static AnalyzeResult getInstance(String pageUrl, Map<String, Integer> resultMap) {
+    /**
+     * Get a {@code AnalyzeResult} instance.
+     * 
+     * @param pageUrl URL of analyzing web page
+     * @param resultMap results of web page analyzing
+     * @return {@code AnalyzeResult} instance
+     */
+    public static AnalyzeResult getInstance(String pageUrl, 
+            Map<String, Integer> resultMap) {
         return new AnalyzeResult(pageUrl, resultMap);
     }
 
+    /**
+     * Get string representation of underlying result map using line break as separator.
+     * 
+     * @return result string
+     */
     public String getResultMapAsString() {
         StringBuilder stringBuilder = new StringBuilder();
         resultMap.forEach((string, count) -> stringBuilder

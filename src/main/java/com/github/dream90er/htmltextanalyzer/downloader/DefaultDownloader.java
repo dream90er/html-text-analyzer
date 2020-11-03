@@ -3,52 +3,72 @@ package com.github.dream90er.htmltextanalyzer.downloader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
+/**
+ * Default implementation of {@link Downloader} interface.
+ * 
+ * @author Sychev Alexey 
+ */ 
 public class DefaultDownloader implements Downloader {
     
-    public static final String CONTENT_TYPE = "text/html";
+    //Acceptable content type.
+    private static final String CONTENT_TYPE = "text/html";
 
-    public static final Pattern CONTENT_TYPE_PATTERN = Pattern.compile(CONTENT_TYPE);
+    private static final Pattern CONTENT_TYPE_PATTERN = Pattern.compile(CONTENT_TYPE);
 
-    public static final String PROTOCOL_REGEX = "https?";
+    //Acceptable protocols.
+    private static final String PROTOCOL_REGEX = "https?";
 
-    public static final Pattern PROTOCOL_PATTERN = Pattern.compile(PROTOCOL_REGEX);
+    private static final Pattern PROTOCOL_PATTERN = Pattern.compile(PROTOCOL_REGEX);
+
+    private final Path pathToTempFile;
+
+    protected DefaultDownloader(Path pathToTempFile) {
+        this.pathToTempFile = pathToTempFile;
+    }
 
     @Override
-    public void download(String pageUrlString, Path pathToFile) {
-        try (FileChannel fileChannel = createChannelToFile(pathToFile);
-            ReadableByteChannel urlChannel = createChannelFromPageUrl(pageUrlString)) {
+    public Path download(URL pageUrl) {
+        try (FileChannel fileChannel = createChannelToFile(pathToTempFile);
+            ReadableByteChannel urlChannel = createChannelFromPageUrl(pageUrl)) {
             fileChannel.transferFrom(urlChannel, 0, Long.MAX_VALUE);
+            return pathToTempFile;
         } catch (IOException e) {
             throw new DownloaderException("An exception occurred while downloading", e);
         }
     }
 
+    /**
+     * Get NIO channel to the file on hard drive.
+     */
     @SuppressWarnings("resource")
     private FileChannel createChannelToFile(Path pathToFile) {
         try {
-            return new FileOutputStream(pathToFile.toFile()).getChannel();
+            return new FileOutputStream(pathToFile.toFile(), false).getChannel();
         } catch (Exception e) {
             throw new DownloaderException("Can't create stream from file", e);
         }
     }
 
-    private ReadableByteChannel createChannelFromPageUrl(String pageUrlString) {
+    /**
+     * Get NIO channel to the resource represented by URL.
+     */
+    private ReadableByteChannel createChannelFromPageUrl(URL pageUrl) {
         try {
-            URL pageUrl = getUrlFromString(pageUrlString);
             verifyProtocol(pageUrl);
             HttpURLConnection connection = (HttpURLConnection) pageUrl.openConnection();
             verifyConnection(connection);
             return Channels.newChannel(connection.getInputStream());
         } catch (IOException e) {
-            throw new DownloaderException("Can't connect to url: " + pageUrlString, e);
+            throw new DownloaderException("Can't connect to url: " + pageUrl, e);
         }
     }
 
@@ -70,11 +90,32 @@ public class DefaultDownloader implements Downloader {
                 "Bad content type (" + contentType + ")");
     }
 
-    private URL getUrlFromString(String urlString) {
+    /**
+     * Get a {@code DefaultDownloader} instance.
+     * 
+     * @param pathToTempFileString path to the temp file
+     * @return {@code DefaultDownloader} instance
+     */
+    public static DefaultDownloader getInstance(String pathToTempFileString) {
+        Path pathToTempFile = createTempFile(pathToTempFileString);
+        return new DefaultDownloader(pathToTempFile);
+    }
+
+    /**
+    * Create temp file and parent directories if they didn't exists. Return path to the 
+    * file.
+    */
+    private static Path createTempFile(String pathToTempFileString) {
         try {
-            return new URL(urlString);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Malformed URL:" + urlString, e);
+            Path tempFile = Paths.get(pathToTempFileString);
+            Path tempDir = tempFile.getParent();
+            if (tempDir != null) Files.createDirectories(tempDir);
+            return Files.exists(tempFile)
+                ? tempFile
+                : Files.createFile(tempFile);
+        } catch (Exception e) {
+            throw new DownloaderException(
+                "An exception occurred while creating temp file", e);
         }
     }
 
