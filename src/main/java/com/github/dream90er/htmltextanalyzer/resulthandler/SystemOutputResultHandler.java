@@ -23,12 +23,7 @@ public class SystemOutputResultHandler implements ResultHandler {
     }
 
     private String buildResultString(AnalyzeResult result) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Results for:\n")
-            .append(result.getPageUrl())
-            .append("\n")
-            .append(result.getResultMapAsString());
-        return stringBuilder.toString();
+        return result.getResultMapAsString();
     }
 
     /**
