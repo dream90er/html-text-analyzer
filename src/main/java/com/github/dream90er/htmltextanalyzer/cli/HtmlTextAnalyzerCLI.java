@@ -3,13 +3,19 @@ package com.github.dream90er.htmltextanalyzer.cli;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.dream90er.htmltextanalyzer.HtmlTextAnalyzer;
 
 /**
  * Command line interface for {@link HtmlTextAnalyzer} 
+ * 
  * @author Sychev Alexey 
  */ 
 public class HtmlTextAnalyzerCLI {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtmlTextAnalyzerCLI.class);
 
     public static void main(String...args) {
         try {
@@ -17,8 +23,7 @@ public class HtmlTextAnalyzerCLI {
             HtmlTextAnalyzer htmlTextAnalyzer = new HtmlTextAnalyzer();
             htmlTextAnalyzer.analyze(pageUrl);
         } catch (Exception e) {
-            //TODO log
-            System.err.println(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

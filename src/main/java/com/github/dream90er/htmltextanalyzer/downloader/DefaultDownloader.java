@@ -12,13 +12,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Default implementation of {@link Downloader} interface.
  * 
  * @author Sychev Alexey 
  */ 
 public class DefaultDownloader implements Downloader {
-    
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDownloader.class);
+
     //Acceptable content type.
     private static final String CONTENT_TYPE = "text/html";
 
@@ -39,7 +44,9 @@ public class DefaultDownloader implements Downloader {
     public Path download(URL pageUrl) {
         try (FileChannel fileChannel = createChannelToFile(pathToTempFile);
             ReadableByteChannel urlChannel = createChannelFromPageUrl(pageUrl)) {
+            LOGGER.info("Downloading from url: {} started.", pageUrl);
             fileChannel.transferFrom(urlChannel, 0, Long.MAX_VALUE);
+            LOGGER.info("Downloading from url: {} ended successfully.", pageUrl);
             return pathToTempFile;
         } catch (IOException e) {
             throw new DownloaderException("An exception occurred while downloading", e);

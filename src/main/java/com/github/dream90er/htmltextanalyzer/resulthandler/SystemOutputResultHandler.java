@@ -2,6 +2,9 @@ package com.github.dream90er.htmltextanalyzer.resulthandler;
 
 import com.github.dream90er.htmltextanalyzer.entity.AnalyzeResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * {@link ResultHandler} implementation that prints {@link AnalyzeResult} to the system 
  * console.
@@ -10,11 +13,13 @@ import com.github.dream90er.htmltextanalyzer.entity.AnalyzeResult;
  */ 
 public class SystemOutputResultHandler implements ResultHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemOutputResultHandler.class);
+
     @Override
     public void handle(AnalyzeResult result) {
         String resultString = buildResultString(result);
         System.out.println(resultString);
-
+        LOGGER.info("Result handled by {}", getClass().getName());
     }
 
     private String buildResultString(AnalyzeResult result) {

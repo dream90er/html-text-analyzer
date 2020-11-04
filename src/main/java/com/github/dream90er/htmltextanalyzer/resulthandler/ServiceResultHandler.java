@@ -4,6 +4,9 @@ import com.github.dream90er.htmltextanalyzer.entity.AnalyzeResult;
 import com.github.dream90er.htmltextanalyzer.service.AnalyzeResultService;
 import com.github.dream90er.htmltextanalyzer.service.ServiceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * {@link ResultHandler} implementation that persists the {@link AnalyzeResult} to the 
  * database using the underlying {@link AnalyzeResultService}.
@@ -11,6 +14,8 @@ import com.github.dream90er.htmltextanalyzer.service.ServiceException;
  * @author Sychev Alexey 
  */ 
 public class ServiceResultHandler implements ResultHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceResultHandler.class);
 
     private final AnalyzeResultService analyzeResultService;
 
@@ -22,9 +27,9 @@ public class ServiceResultHandler implements ResultHandler {
     public void handle(AnalyzeResult result) {
         try {
             analyzeResultService.saveAnalyzeResult(result);
+            LOGGER.info("Result handled by {}", getClass().getName());
         } catch (ServiceException e) {
-            //TODO log
-            System.err.println(e.getMessage());
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 

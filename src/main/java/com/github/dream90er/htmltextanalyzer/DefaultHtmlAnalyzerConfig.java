@@ -13,16 +13,21 @@ import com.github.dream90er.htmltextanalyzer.resulthandler.SystemOutputResultHan
 import com.github.dream90er.htmltextanalyzer.service.SQLiteAnalyzeRezultService;
 import com.github.dream90er.htmltextanalyzer.service.ServiceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Default configuration of Html Text Analyzer.
  * 
  * @author Sychev Alexey 
  */ public class DefaultHtmlAnalyzerConfig implements HtmlTextAnalyzerConfig {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultHtmlAnalyzerConfig.class);
+
     /**
      * Default path to the temporary file.
      */
-    private static final String TEMP_FILE_PATH = "temp/temp.html";
+    private static final String TEMP_FILE_PATH = "temp.html";
 
     /**
      * Default database connection string.
@@ -64,8 +69,7 @@ import com.github.dream90er.htmltextanalyzer.service.ServiceException;
                 .getInstance(SQLITE_CONNECTION_STRING);
             this.resultHandlers.add(ServiceResultHandler.getInstance(service));
         } catch (ServiceException e) {
-            //TODO log
-            System.err.println(e.getMessage());
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 

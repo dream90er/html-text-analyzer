@@ -14,5 +14,6 @@ target/
 .sts4-cache
 
 ### html-text-analyzer ###
-temp/
-htmlTextAnalyzer.db
+/temp.html
+/htmlTextAnalyzer.db
+/logs/

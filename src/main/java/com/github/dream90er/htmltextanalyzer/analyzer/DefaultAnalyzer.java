@@ -19,7 +19,8 @@ import com.github.dream90er.htmltextanalyzer.analyzer.sax.ConsumerHandler;
 import com.github.dream90er.htmltextanalyzer.analyzer.sax.ExcludeFilterHandler;
 
 import org.ccil.cowan.tagsoup.Parser;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -27,7 +28,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * Default implementation of {@link Analyzer} interface.
  * Uses TagSoup parser and custom SAX handlers for html parsing.
- * Resulting text chunks passed to consumer that splits them into words counts and adds 
+ * Resulting text chunks passed to consumer that splits them into words, counts and adds 
  * to the result map.
  * 
  * @author Sychev Alexey 
@@ -37,6 +38,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @see #getElementConsumer(Map)
  */ 
 public class DefaultAnalyzer implements Analyzer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAnalyzer.class);
 
     private static final String DELIMETERS_REGEX_STRING = 
         "[\\s,\\.\\!\\?\";:\\[\\]\\(\\)\\n\\r\\t]+";
@@ -57,7 +60,12 @@ public class DefaultAnalyzer implements Analyzer {
         parser.setContentHandler(handler);
         try (InputStream fileInputStream = new FileInputStream(pathToFile.toFile())) {
             InputSource source = createInputSource(fileInputStream);
+            LOGGER.info(
+                "File analysis started. File: {}", pathToFile.toAbsolutePath().toString());
             parser.parse(source);
+            LOGGER.info(
+                "File analysis ended successfully. File: {}", 
+                pathToFile.toAbsolutePath().toString());
         } catch (IOException e) {
             throw new AnalyzerException(
                 "An exception occurred while reading file" + pathToFile.toString(), e);
