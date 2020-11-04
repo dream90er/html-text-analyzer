@@ -66,6 +66,12 @@ public class DefaultAnalyzer implements Analyzer {
             LOGGER.info(
                 "File analysis ended successfully. File: {}", 
                 pathToFile.toAbsolutePath().toString());
+            LOGGER.debug(
+                "Result map contains {} unique words and {} total words.", 
+                resultMap.size(),
+                resultMap.values()
+                    .stream()
+                    .reduce(0, (acc, next) -> acc + next));
         } catch (IOException e) {
             throw new AnalyzerException(
                 "An exception occurred while reading file" + pathToFile.toString(), e);

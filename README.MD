@@ -27,11 +27,11 @@ From project root directory switch to the folder with compiled artifact
 ```
 cd target
 ```
-Run artifact with web page as argument
+Run artifact with web url page as argument
 ```
-java -jar html-text-analyzer.jar {WEB_PAGE}
+java -jar html-text-analyzer.jar {WEB_PAGE_URL}
 ```
-{WEB_PAGE} must contain protocol (http or https) and must not be empty.
+{WEB_PAGE_URL} must contain protocol (http or https) and must not be empty.
 
 Example:
 ```
